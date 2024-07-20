@@ -43,8 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # django apps
-    'diary',
     'accounts',
+    'diary',
     'challenge',
     'firstQuestion',
 
