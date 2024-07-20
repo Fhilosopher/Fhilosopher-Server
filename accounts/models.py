@@ -27,8 +27,11 @@ class UserManager(BaseUserManager):
     
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email address'), unique=True)
-    password = models.CharField(max_length=50)
+    password = models.CharField(max_length=100)
     name = models.CharField(max_length=50)
+    is_alert = models.BooleanField(default=False)
+    alert_hour = models.IntegerField(null=True, blank=True)
+    alert_min = models.IntegerField(null=True, blank=True)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -40,10 +43,4 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
-    
-
-class Alert(models.Model):
-    user_id = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    is_alert = models.BooleanField(default=False)
-    alert_hour = models.IntegerField()
-    alert_min = models.IntegerField()
+        
