@@ -13,6 +13,9 @@ class Month(models.Model):
             self.year = self.date.year
             self.month = self.date.month
         super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return str(self.month)
 
 
 class Diary(models.Model):
@@ -24,8 +27,8 @@ class Diary(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     month_id = models.ForeignKey(Month, on_delete=models.CASCADE)
 
-    # def __str__(self):
-    #     return self.
+    def __str__(self):
+        return str(self.created_date)
 
 
 class QandA(models.Model):

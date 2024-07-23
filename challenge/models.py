@@ -8,8 +8,8 @@ class DailyChallenge(models.Model):
     goal_day = models.IntegerField(default=7)
     today_complete = models.BooleanField(default=False)
 
-    # def __str__(self):
-    #     return self.user_id
+    def __str__(self):
+        return str(self.user_id)
 
 class Badge(models.Model):
     title = models.CharField(max_length=50)
