@@ -6,6 +6,7 @@ class Month(models.Model):
     year = models.IntegerField()
     month = models.IntegerField()
     count = models.IntegerField(default=0)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
     # date 필드에서 연도와 월을 추출하여 저장
     def save(self, *args, **kwargs):
@@ -15,7 +16,7 @@ class Month(models.Model):
         super().save(*args, **kwargs)
     
     def __str__(self):
-        return str(self.month)
+        return f"{self.user_id}의 {self.month}월 폴더 {self.count}개 일기 "
 
 
 class Diary(models.Model):
@@ -28,7 +29,7 @@ class Diary(models.Model):
     month_id = models.ForeignKey(Month, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.created_date)
+        return f"{self.user_id}의 {self.created_date}일 일기 - {self.is_complete}"
 
 
 class QandA(models.Model):
