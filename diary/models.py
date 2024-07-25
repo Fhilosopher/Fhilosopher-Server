@@ -1,7 +1,8 @@
 from django.db import models
 from accounts.models import User
 from firstQuestion.models import FirstQuestion
-from datetime import datetime
+from datetime import datetime, time, timedelta
+
 
 class Month(models.Model):
     date = models.DateField(auto_now_add=True)
@@ -27,13 +28,19 @@ class Month(models.Model):
 class Diary(models.Model):
     firstq = models.TextField(null=True, blank=True)
     limitq_num = models.IntegerField(default=6)
-    created_date = models.DateField(auto_now_add=True)
+    created_date = models.DateField(null=True, blank=True)
     created_time = models.TimeField(auto_now_add=True)
     is_complete = models.BooleanField(default=False)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     month_id = models.ForeignKey(Month, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
+        now = datetime.now()
+        if now.time() <= time(5, 0):
+            self.created_date = (now - timedelta(days=1)).date()
+        else:
+            self.created_date = now.date()
+
         if not self.firstq:  # firstq가 비어 있을 때만 설정
             user = self.user_id
             firstq_index = user.firstq_index
@@ -48,9 +55,8 @@ class Diary(models.Model):
                     print(f"Invalid index: {firstq_index}")
             else:
                 print("FirstQuestion or questions not found")
-        
-        super().save(*args, **kwargs)
 
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.user_id}의 {self.created_date}일 일기 - {self.is_complete}"
