@@ -1,18 +1,23 @@
 from django.db import models
 from accounts.models import User
+from firstQuestion.models import FirstQuestion
+from datetime import datetime
 
 class Month(models.Model):
     date = models.DateField(auto_now_add=True)
-    year = models.IntegerField()
-    month = models.IntegerField()
+    year = models.IntegerField(null=True, blank=True)
+    month = models.IntegerField(null=True, blank=True)
     count = models.IntegerField(default=0)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    # date 필드에서 연도와 월을 추출하여 저장
+    class Meta:
+        unique_together = ('user_id', 'year', 'month')
+
     def save(self, *args, **kwargs):
-        if self.date:
-            self.year = self.date.year
-            self.month = self.date.month
+        now_date = datetime.now()
+        self.year = now_date.year
+        self.month = now_date.month
+        print(f"Saving Month: year={self.year}, month={self.month}")
         super().save(*args, **kwargs)
     
     def __str__(self):
@@ -20,13 +25,32 @@ class Month(models.Model):
 
 
 class Diary(models.Model):
-    firstq = models.TextField()
+    firstq = models.TextField(null=True, blank=True)
     limitq_num = models.IntegerField(default=6)
     created_date = models.DateField(auto_now_add=True)
     created_time = models.TimeField(auto_now_add=True)
     is_complete = models.BooleanField(default=False)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     month_id = models.ForeignKey(Month, on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        if not self.firstq:  # firstq가 비어 있을 때만 설정
+            user = self.user_id
+            firstq_index = user.firstq_index
+            first_question = FirstQuestion.objects.first()
+            
+            if first_question and len(first_question.questions) > 0:
+                questions = first_question.questions
+                if 0 <= firstq_index < len(questions):
+                    self.firstq = questions[firstq_index]
+                    print(f"firstq set to: {self.firstq}")
+                else:
+                    print(f"Invalid index: {firstq_index}")
+            else:
+                print("FirstQuestion or questions not found")
+        
+        super().save(*args, **kwargs)
+
 
     def __str__(self):
         return f"{self.user_id}의 {self.created_date}일 일기 - {self.is_complete}"
