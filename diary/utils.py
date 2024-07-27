@@ -58,6 +58,7 @@ def complete_diary(diary_id):
     diary = get_object_or_404(Diary, id=diary_id)
     qandas = QandA.objects.filter(diary_id=diary.id)
 
+    # 조건문 지워도 될것같음
     if qandas.exists():
         diary.is_complete = True
         diary.save()
