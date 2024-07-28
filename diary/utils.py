@@ -69,6 +69,8 @@ def complete_diary(diary_id):
             month_obj.save()
 
         daily_challenge = DailyChallenge.objects.filter(user_id=diary.user_id).first()
+        print(daily_challenge)
+
         if daily_challenge:
             daily_challenge.today_complete = True
             daily_challenge.current_day += 1
@@ -77,6 +79,7 @@ def complete_diary(diary_id):
             user = User.objects.get(id=diary.user_id.id)
             if not user.is_firstday:
                 user.is_firstday = True
+              
                 user.save()
 
                 Badge.objects.create(
@@ -96,18 +99,10 @@ def complete_diary(diary_id):
                         type="goal_day",
                         user_id=user
                     )
+                daily_challenge.start_day = daily_challenge.current_day
                 daily_challenge.current_day = daily_challenge.goal_day
                 daily_challenge.goal_day += 7
                 daily_challenge.save()
-
-        all_daily_challenges = DailyChallenge.objects.all()
-        for challenge in all_daily_challenges:
-            if challenge.today_complete:
-                challenge.today_complete = False
-            else:
-                challenge.current_day = 0
-                challenge.goal_day = 7
-            challenge.save()
 
         diary_context = get_diary_context(diary)
         return {"status": "success", "data": diary_context}

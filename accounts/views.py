@@ -1,5 +1,4 @@
 from rest_framework.viewsets import ModelViewSet
-from dj_rest_auth.views import LogoutView
 from rest_framework_simplejwt.tokens import AccessToken
 from .models import *
 from django.shortcuts import get_object_or_404

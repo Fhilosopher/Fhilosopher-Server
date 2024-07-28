@@ -9,11 +9,29 @@ from challenge.models import *
 from rest_framework import status
 from .utils import *
 from django.utils import timezone
-
-
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 class MonthViewset(ModelViewSet):
     queryset = Month.objects.all()
     serializer_class = MonthSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+
+       # diary list 불러오기 (월 폴더 선택 시)
+    @action(detail=False, methods=['get'], url_path='list_months')
+    def list_months(self, request, user_id=None):
+        user_id = int(request.query_params.get('user_id'))
+        authenticated_user_id = request.user.id
+        if not user_id:
+            return Response({"status": "error", "message": "month_id is required"}, status=400)
+        
+        if user_id != authenticated_user_id :
+            return Response({"status": "error", "message": "훔쳐보지마~!"}, status=401)
+        
+        queryset = self.queryset.filter(user_id=user_id)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({"status": "success", "data": serializer.data})
 
 
 class DiaryViewset(ModelViewSet):

@@ -15,7 +15,7 @@ class DailyChallenge(models.Model):
 class Badge(models.Model):
     title = models.CharField(max_length=50)
     type = models.CharField(max_length=50)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE,related_name="Badges")
 
     def __str__(self):
         return self.title
