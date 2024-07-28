@@ -25,10 +25,10 @@ def initialize_interviewer(firstq):
 def get_followup_question(messages, answer):
     messages.append({"role": "user", "content": answer})
     response = client.chat.completions.create(
-        model="gpt-4",
+        model="gpt-4o-mini",
         messages=messages
     )
-    follow_up_question = response['choices'][0]['message']['content']
+    follow_up_question = response.choices[0].message.content
     messages.append({"role": "assistant", "content": follow_up_question})
     return follow_up_question, messages
 

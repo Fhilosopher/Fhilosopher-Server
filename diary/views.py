@@ -42,6 +42,11 @@ class DiaryViewset(ModelViewSet):
         diary.messages = messages
         diary.save()
 
+        return Response({
+            "status": "success",
+            "data": DiarySerializer(diary).data,
+        }, status=status.HTTP_201_CREATED)
+
 
     # complete diary
     @action(detail=True, methods=['patch'])
@@ -109,7 +114,7 @@ class QandAViewset(ModelViewSet):
             diary.messages = updated_messages
             diary.save()
 
-            new_qanda = QandA.objects.create(diary=diary, answer=answer, question=followup_question)
+            new_qanda = QandA.objects.create(diary_id=diary, answer=answer, question=followup_question)
 
             # 다이어리가 완료되었는지 확인 (complete_diary 함수 호출)
             if QandA.objects.filter(diary_id=diary.id).count() == diary.limitq_num:
