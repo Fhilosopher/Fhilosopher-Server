@@ -14,6 +14,10 @@ from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
 import os
+import pymysql
+
+# mysql connection
+pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -188,3 +192,17 @@ USE_TZ = True
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"  # Default
 
 SCHEDULER_DEFAULT = True
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql', # engine: mysql
+        'NAME' : 'fhilosopher', # DB Name
+        'USER' : 'admin', # DB User
+        'PASSWORD' : 'hdh20-72021377', # Password
+        'HOST': 'database-1.c58imuyo4xi3.ap-northeast-2.rds.amazonaws.com', # 생성한 데이터베이스 엔드포인트
+        'PORT': '3306', # 데이터베이스 포트
+        'OPTIONS':{
+            'init_command' : "SET sql_mode='STRICT_TRANS_TABLES'"
+        }
+    }
+}

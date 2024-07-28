@@ -17,8 +17,7 @@ class MonthViewset(ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
-
-       # diary list 불러오기 (월 폴더 선택 시)
+    # diary list 불러오기 (월 폴더 선택 시)
     @action(detail=False, methods=['get'], url_path='list_months')
     def list_months(self, request, user_id=None):
         user_id = int(request.query_params.get('user_id'))
