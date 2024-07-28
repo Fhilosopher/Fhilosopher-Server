@@ -10,16 +10,6 @@ class Month(models.Model):
     month = models.IntegerField(null=True, blank=True)
     count = models.IntegerField(default=0)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = ('user_id', 'year', 'month')
-
-    def save(self, *args, **kwargs):
-        now_date = datetime.now()
-        self.year = now_date.year
-        self.month = now_date.month
-        print(f"Saving Month: year={self.year}, month={self.month}")
-        super().save(*args, **kwargs)
     
     def __str__(self):
         return f"{self.user_id}의 {self.month}월 폴더 {self.count}개 일기 "
@@ -31,6 +21,7 @@ class Diary(models.Model):
     created_date = models.DateField(null=True, blank=True)
     created_time = models.TimeField(auto_now_add=True)
     is_complete = models.BooleanField(default=False)
+    messages = models.JSONField(default=list)  # 대화 흐름을 저장하기 위한 필드
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     month_id = models.ForeignKey(Month, on_delete=models.CASCADE)
 

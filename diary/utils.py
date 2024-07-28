@@ -13,24 +13,24 @@ load_dotenv()
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 
-def get_followup_question(prompt):
-    print(prompt)
-    try:
-        response = client.chat.completions.create(
-            model="",
-            messages=[
-                {"role": "user", "content": prompt}
-            ],
-        )
-        completion = response.choices[0].message.content
-        print(completion)
-        return completion
-    except (APIConnectionError, RateLimitError, APIStatusError) as e:
-        print(f"API Error: {e}")
-        raise
-    except OpenAIError as e:
-        print(f"OpenAI Error: {e}")
-        raise
+def initialize_interviewer(firstq):
+    system_prompt = {"role": "system", "content": "You are an interviewer who asks engaging follow-up questions based on the user's answers."}
+    messages = [
+        system_prompt,
+        {"role": "assistant", "content": firstq}
+    ]
+
+    return messages
+
+def get_followup_question(messages, answer):
+    messages.append({"role": "user", "content": answer})
+    response = client.chat.completions.create(
+        model="gpt-4",
+        messages=messages
+    )
+    follow_up_question = response['choices'][0]['message']['content']
+    messages.append({"role": "assistant", "content": follow_up_question})
+    return follow_up_question, messages
 
 
 def get_diary_context(diary):

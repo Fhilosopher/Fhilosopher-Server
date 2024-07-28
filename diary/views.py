@@ -8,6 +8,7 @@ from .models import *
 from challenge.models import *
 from rest_framework import status
 from .utils import *
+from django.utils import timezone
 
 
 class MonthViewset(ModelViewSet):
@@ -18,6 +19,29 @@ class MonthViewset(ModelViewSet):
 class DiaryViewset(ModelViewSet):
     queryset = Diary.objects.all()
     serializer_class = DiarySerializer
+
+    def create(self, request, *args, **kwargs):
+        user_id = request.data.get('user_id')
+        created_date = timezone.now().date()
+
+        # Check if a diary entry already exists for this user and date
+        if Diary.objects.filter(user_id=user_id, created_date=created_date).exists():
+            return Response({
+                "status": "error",
+                "message": "A diary entry for this date already exists."
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        response = super().create(request, *args, **kwargs)
+        diary = Diary.objects.get(id=response.data['id'])
+        firstq = diary.firstq
+
+        # Initialize GPT interviewer and get the first question
+        messages = initialize_interviewer(firstq)
+        
+        # Save the initial messages to the diary
+        diary.messages = messages
+        diary.save()
+
 
     # complete diary
     @action(detail=True, methods=['patch'])
@@ -79,11 +103,13 @@ class QandAViewset(ModelViewSet):
                 }, status=status.HTTP_400_BAD_REQUEST)
 
             diary = get_object_or_404(Diary, id=diary_id)
-            qanda = QandA.objects.create(diary_id=diary, answer=answer)
+            messages = diary.messages
 
-            followup_question = get_followup_question(answer)
-            qanda.question = followup_question
-            qanda.save()
+            followup_question, updated_messages = get_followup_question(messages, answer)
+            diary.messages = updated_messages
+            diary.save()
+
+            new_qanda = QandA.objects.create(diary=diary, answer=answer, question=followup_question)
 
             # 다이어리가 완료되었는지 확인 (complete_diary 함수 호출)
             if QandA.objects.filter(diary_id=diary.id).count() == diary.limitq_num:
@@ -91,7 +117,7 @@ class QandAViewset(ModelViewSet):
 
             return Response({
                 "status": "success",
-                "data": QandASerializer(qanda).data
+                "data": QandASerializer(new_qanda).data
             }, status=status.HTTP_201_CREATED)
 
         except Exception as e:
