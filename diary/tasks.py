@@ -48,6 +48,7 @@ def check_is_complete():
                             type="goal_day",
                             user_id=user
                         )
+                    daily_challenge.start_day = daily_challenge.current_day
                     daily_challenge.current_day = daily_challenge.goal_day
                     daily_challenge.goal_day += 7
                     daily_challenge.save()
@@ -59,6 +60,7 @@ def check_is_complete():
         if challenge.today_complete:
             challenge.today_complete = False
         else:
+            challenge.start_day = 0
             challenge.current_day = 0
             challenge.goal_day = 7
         challenge.save()
