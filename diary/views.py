@@ -25,6 +25,11 @@ class MonthViewset(ModelViewSet):
         if not user_id:
             return Response({"status": "error", "message": "month_id is required"}, status=400)
         
+        try:
+            user_id = int(user_id)
+        except ValueError:
+            return Response({"status": "error", "message": "user_id must be an integer"}, status=status.HTTP_400_BAD_REQUEST)
+        
         if user_id != authenticated_user_id :
             return Response({"status": "error", "message": "훔쳐보지마~!"}, status=401)
         
@@ -104,6 +109,11 @@ class DiaryViewset(ModelViewSet):
         month_id = request.query_params.get('month_id')
         if not month_id:
             return Response({"status": "error", "message": "month_id is required"}, status=400)
+        
+        try:
+            month = Month.objects.get(id=month_id)
+        except Month.DoesNotExist:
+            return Response({"status": "error", "message": "Invalid month_id"}, status=status.HTTP_400_BAD_REQUEST)
         
         queryset = self.queryset.filter(month_id=month_id, is_complete=True)
         serializer = self.get_serializer(queryset, many=True)
