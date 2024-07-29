@@ -82,15 +82,20 @@ class KakaoLoginView(View):
         
         #DB에 있는 유저라면? 
        
-        if user: # 기존 사용사
+         if user:  # 기존 사용자
             encoded_jwt = generate_jwt_token(user)
-            return JsonResponse({
-                'old': 'old',
+           
+            redirect_url = f'/diary/month/list_months/?user_id={user.id}'
+            response = JsonResponse({
+                'status': 'succes_old',
                 'access_token': encoded_jwt,
+                'redirect_url': redirect_url,
                 'name': user.name,
                 'email': user.email,
                 'user_pk': user.id,
-             }, status=200)
+            }, status=200)
+            response.set_cookie('access_token', encoded_jwt, httponly=True, secure=True)
+            return response
         else:# 신규 사용자
             new_user_info = User(
                 name=user_info['properties']['nickname'],
@@ -104,11 +109,14 @@ class KakaoLoginView(View):
             DailyChallenge.objects.create(user_id=new_user_info)
             Month.objects.create(user_id=new_user_info,year=now.year,month=now.month)
 
-            return JsonResponse({
-                'new': 'new',
+            redirect_url = f'/diary/month/list_months/?user_id={new_user_info.id}'
+            response = JsonResponse({
+                'status': 'success',
                 'access_token': encoded_jwt,
+                'redirect_url': redirect_url,
                 'name': new_user_info.name,
                 'email': new_user_info.email,
                 'user_pk': new_user_info.id,
-        
             }, status=200)
+            response.set_cookie('access_token', encoded_jwt, httponly=True, secure=True)
+            return response
