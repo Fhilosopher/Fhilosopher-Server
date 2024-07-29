@@ -82,7 +82,7 @@ class KakaoLoginView(View):
         
         #DB에 있는 유저라면? 
        
-         if user:  # 기존 사용자
+        if user:  # 기존 사용자
             encoded_jwt = generate_jwt_token(user)
            
             redirect_url = f'/diary/month/list_months/?user_id={user.id}'
