@@ -31,9 +31,12 @@ load_dotenv()
 SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = ['your_domain.com', 'localhost', '127.0.0.1']
+
 
 
 # Application definition
@@ -103,17 +106,29 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # engine: mysql
-        'NAME' : 'fhilosopher', # DB Name
-        'USER' : 'admin', # DB User
-        'PASSWORD' : 'hdh20-72021377', # Password
-        'HOST': 'database-1.c58imuyo4xi3.ap-northeast-2.rds.amazonaws.com', # 생성한 데이터베이스 엔드포인트
-        'PORT': '3306', # 데이터베이스 포트
-        'OPTIONS':{
-            'init_command' : "SET sql_mode='STRICT_TRANS_TABLES'"
-        }
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'hackathon',  # 데이터베이스 이름
+        'USER': 'hackathon',  # 데이터베이스 사용자
+        'PASSWORD': 'hackathon',  # 데이터베이스 비밀번호
+        'HOST': 'localhost',  # 데이터베이스 호스트
+        'PORT': '3306',  # 데이터베이스 포트
     }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql', # engine: mysql
+#         'NAME' : 'fhilosopher', # DB Name
+#         'USER' : 'admin', # DB User
+#         'PASSWORD' : 'hdh20-72021377', # Password
+#         'HOST': 'database-1.c58imuyo4xi3.ap-northeast-2.rds.amazonaws.com', # 생성한 데이터베이스 엔드포인트
+#         'PORT': '3306', # 데이터베이스 포트
+#         'OPTIONS':{
+#             'init_command' : "SET sql_mode='STRICT_TRANS_TABLES'"
+#         }
+#     }
+# }
 
 
 # Password validation
