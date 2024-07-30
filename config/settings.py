@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
@@ -34,8 +33,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 DEBUG = False
 
 # ALLOWED_HOSTS = []
-
-ALLOWED_HOSTS = ['your_domain.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['13.125.86.55', 'localhost', '127.0.0.1']
 
 
 
