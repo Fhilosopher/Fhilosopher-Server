@@ -36,7 +36,7 @@
         function subscribeForPushNotifications(swReg) {
             swReg.pushManager.subscribe({
                 userVisibleOnly: true,
-                applicationServerKey: 'BKd1I8PDrg7zidthfuKgR-0k_-CwlXZk3p1_F1tLWAur3w3lDdSfiAQHFl_cXRi6pguzNe9Akfxrqo25XXXxGZ4'
+                applicationServerKey: 'BKd1I8PDrg7zidthfuKgR-0k_-CwlXZk3p1_F1tLWAur3w3lDdSfiAQHFl_cXRi6pguzNe9Akfxrqo25XXXxGZ4'//이건 전송할때 필요한 제 서버키입니다
             }).then(function(subscription) {
                 console.log('User is subscribed:', subscription);
                 displaySubscriptionInfo(subscription);

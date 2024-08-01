@@ -1,9 +1,11 @@
 from django.db import models
+from accounts.models import User
 
 class Subscription(models.Model):
-    endpoint = models.TextField(null=True, blank=True)
-    p256dh = models.TextField(null=True, blank=True)
-    auth = models.TextField(null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    endpoint = models.TextField()
+    p256dh = models.TextField()
+    auth = models.TextField()
 
     def __str__(self):
-        return self.endpoint
+        return f'{self.user} - {self.endpoint}'

@@ -51,65 +51,6 @@ function displaySubscriptionInfo(subscription) {
     console.log('Subscription:', subscription);
 }
 
-function sendPushMessage() {
-    const subscriptionInfo = document.getElementById('subscription-info').textContent;
-    if (!subscriptionInfo) {
-        console.error('No subscription info available');
-        return;
-    }
-
-    const message = {
-        title: 'Test Notification',
-        message: 'This is a test push notification with an image and a link!',
-        icon: 'https://example.com/icon.png',
-        badge: 'https://example.com/badge.png',
-        image: 'https://example.com/image.png',
-        url: 'https://example.com'
-    };
-
-    fetch('/webmessage/send_push/', {
-        method: 'POST',
-        body: JSON.stringify(message),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }).then(function(response) {
-        if (response.ok) {
-            console.log('Push message sent successfully.');
-        } else {
-            console.error('Failed to send push message.');
-        }
-    }).catch(function(error) {
-        console.error('Error sending push message:', error);
-    });
-}
-
-function sendPushToAll() {
-    const message = {
-        title: 'Test Notification',
-        message: 'This is a test push message to all subscribers with an image and a link!',
-        icon: 'https://example.com/icon.png',
-        badge: 'https://example.com/badge.png',
-        image: 'https://example.com/image.png',
-        url: 'https://example.com'
-    };
-
-    fetch('/webmessage/send_push_to_all/', {
-        method: 'POST',
-        body: JSON.stringify(message),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }).then(function(response) {
-        if (response.ok) {
-            console.log('Push message sent to all subscribers successfully.');
-        } else {
-            console.error('Failed to send push message to all subscribers.');
-        }
-    }).catch(function(error) {
-        console.error('Error sending push message to all subscribers:', error);
-    });
-}
 
 function urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
