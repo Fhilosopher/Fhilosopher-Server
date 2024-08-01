@@ -33,8 +33,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 DEBUG = False
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['13.125.86.55', 'localhost', '127.0.0.1']
-
+ALLOWED_HOSTS = ['boda-sogang.site','www.boda-sogang.site','localhost']
 
 
 # Application definition
