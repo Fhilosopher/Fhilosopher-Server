@@ -11,7 +11,6 @@ from .utils import *
 from django.utils import timezone
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
-
 class MonthViewset(ModelViewSet):
     queryset = Month.objects.all()
     serializer_class = MonthSerializer
