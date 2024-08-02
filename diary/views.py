@@ -1,4 +1,4 @@
-from rest_framework.decorators import action
+from rest_framework.decorators import action, authentication_classes, permission_classes
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from django.shortcuts import render
@@ -8,16 +8,18 @@ from .models import *
 from challenge.models import *
 from rest_framework import status
 from .utils import *
-from django.utils import timezone
+from datetime import datetime, time, timedelta
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
+
+
 class MonthViewset(ModelViewSet):
     queryset = Month.objects.all()
     serializer_class = MonthSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
-    # diary list 불러오기 (월 폴더 선택 시)
+    # month list 불러오기
     @action(detail=False, methods=['get'], url_path='list_months')
     def list_months(self, request, user_id=None):
         user_id = int(request.query_params.get('user_id'))
@@ -25,7 +27,12 @@ class MonthViewset(ModelViewSet):
         if not user_id:
             return Response({"status": "error", "message": "month_id is required"}, status=400)
         
-        if user_id != authenticated_user_id :
+        try:
+            user_id = int(user_id)
+        except ValueError:
+            return Response({"status": "error", "message": "user_id must be an integer"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if user_id != authenticated_user_id :       # 사용자 인증
             return Response({"status": "error", "message": "훔쳐보지마~!"}, status=401)
         
         queryset = self.queryset.filter(user_id=user_id)
@@ -36,10 +43,28 @@ class MonthViewset(ModelViewSet):
 class DiaryViewset(ModelViewSet):
     queryset = Diary.objects.all()
     serializer_class = DiarySerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
         user_id = request.data.get('user_id')
-        created_date = timezone.now().date()
+        authenticated_user_id = request.user.id
+        print(authenticated_user_id)
+
+        if not user_id:
+            return Response({
+                "status": "error",
+                "message": "user_id is required."
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        if int(user_id) != authenticated_user_id:    # 사용자 인증
+            return Response({"status": "error", "message": "Diary post Access denied"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        created_date = datetime.now()
+        if created_date.time() <= time(5, 0):
+            created_date = (created_date - timedelta(days=1)).date()
+        else:
+            created_date = created_date.date()
 
         # Check if a diary entry already exists for this user and date
         if Diary.objects.filter(user_id=user_id, created_date=created_date).exists():
@@ -69,6 +94,11 @@ class DiaryViewset(ModelViewSet):
     @action(detail=True, methods=['patch'])
     def finish_diary(self, request, pk=None):
         diary = get_object_or_404(Diary, id=pk)
+        authenticated_user_id = request.user.id
+
+        if int(diary.user_id.id) != authenticated_user_id:     # 사용자 인증
+            return Response({"status": "error", "message": "Access denied"}, status=status.HTTP_401_UNAUTHORIZED)
+        
         qandas = QandA.objects.filter(diary_id=diary.id)
 
         # qanda가 하나라도 존재하는 경우 (성공)
@@ -93,6 +123,11 @@ class DiaryViewset(ModelViewSet):
     def view_diary(self, request, pk=None):
         try:
             diary = get_object_or_404(Diary, id=pk)
+            authenticated_user_id = request.user.id
+
+            if int(diary.user_id.id) != authenticated_user_id:
+                return Response({"status": "error", "message": "Access denied"}, status=status.HTTP_401_UNAUTHORIZED)
+            
             diary_context = get_diary_context(diary)
             return Response({"status": "success", "data": diary_context}, status=status.HTTP_200_OK)
         except Exception as e:
@@ -102,8 +137,18 @@ class DiaryViewset(ModelViewSet):
     @action(detail=False, methods=['get'], url_path='list_diaries')
     def list_diaries(self, request, month_id=None):
         month_id = request.query_params.get('month_id')
+        authenticated_user_id = request.user.id
+
         if not month_id:
             return Response({"status": "error", "message": "month_id is required"}, status=400)
+        
+        try:
+            month = Month.objects.get(id=month_id)
+        except Month.DoesNotExist:
+            return Response({"status": "error", "message": "Invalid month_id"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if int(month.user_id.id) != authenticated_user_id:   # 사용자 인증
+            return Response({"status": "error", "message": "Access denied"}, status=status.HTTP_401_UNAUTHORIZED)
         
         queryset = self.queryset.filter(month_id=month_id, is_complete=True)
         serializer = self.get_serializer(queryset, many=True)
@@ -113,11 +158,15 @@ class DiaryViewset(ModelViewSet):
 class QandAViewset(ModelViewSet):
     queryset = QandA.objects.all()
     serializer_class = QandASerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
         try:
             diary_id = request.data.get('diary_id')
             answer = request.data.get('answer')
+            authenticated_user_id = request.user.id
+
             if not diary_id or not answer:
                 return Response({
                     "status": "error",
@@ -125,6 +174,10 @@ class QandAViewset(ModelViewSet):
                 }, status=status.HTTP_400_BAD_REQUEST)
 
             diary = get_object_or_404(Diary, id=diary_id)
+
+            if int(diary.user_id.id) != authenticated_user_id:
+                return Response({"status": "error", "message": "Access denied"}, status=status.HTTP_401_UNAUTHORIZED)
+                                
             messages = diary.messages
 
             followup_question, updated_messages = get_followup_question(messages, answer)
