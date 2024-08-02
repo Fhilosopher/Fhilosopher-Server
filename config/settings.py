@@ -3,7 +3,7 @@ from datetime import timedelta
 from dotenv import load_dotenv
 import os
 import pymysql
-
+import mimetypes
 # mysql connection
 pymysql.install_as_MySQLdb()
 
@@ -73,6 +73,7 @@ CORS_ORIGIN_WHITELIST = [
     "http://127.0.0.1:3000",
     "http://127.0.0.1:8000",
     "https://boda-sogang.site",
+    "http://localhost:3000",
 ]
 
 CORS_ALLOW_HEADERS = [
@@ -223,7 +224,7 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=7),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
-}
+    }
 
 
 TIME_ZONE = 'Asia/Seoul'

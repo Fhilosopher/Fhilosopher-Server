@@ -5,9 +5,22 @@ import pytz
 from pywebpush import webpush, WebPushException
 from django.conf import settings
 from .models import Subscription
+from urllib.parse import urlparse
+from datetime import datetime, timedelta
 
+def generate_vapid_claims(audience):
+    return {
+        "aud": audience,
+        "exp": int((datetime.now() + timedelta(hours=12)).timestamp()),  # Unix 타임스탬프로 변환
+        "sub": "mailto:jmg0916789@gmail.com"
+    }
 def send_web_push(subscription_info, title, message, icon=None, badge=None, image=None, url=None):
     try:
+        # 구독 엔드포인트에서 푸시 서비스 URL 추출
+        endpoint = subscription_info["endpoint"]
+        parsed_url = urlparse(endpoint)
+        aud = f"{parsed_url.scheme}://{parsed_url.netloc}"
+
         payload = json.dumps({
             "title": title,
             "body": message,
@@ -16,20 +29,25 @@ def send_web_push(subscription_info, title, message, icon=None, badge=None, imag
             "image": image,
             "url": url
         })
+
+        vapid_claims = generate_vapid_claims(aud)
+
         webpush(
-            subscription_info,
+            subscription_info=subscription_info,
             data=payload,
             vapid_private_key=settings.VAPID_PRIVATE_KEY,
-            vapid_claims=settings.VAPID_CLAIMS
+            vapid_claims=vapid_claims
         )
+        print('Web push sent successfully')
         return {'message': 'Push message sent successfully.'}
         
     except WebPushException as ex:
+        print(f'WebPushException occurred: {ex}')
         return {'message': 'An error occurred: {}'.format(ex), 'status': 500}
     except Exception as e:
         print(f'General exception occurred: {e}')
-        return {'message': 'An error occurred: {}'.format(e), 'status': 500}
-
+        return {'message': 'An error occurred: {}'.format(e), 'status': 500}    
+    
 def send_scheduled_notifications():
     # 현재 시간 구하기
     now = datetime.now()

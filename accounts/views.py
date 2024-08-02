@@ -42,7 +42,47 @@ class MyPageViewSet(ModelViewSet):
         if int(user_id) != request.user.id : 
             return Response({'detail': 'You do not have permission to access this resource.'}, status=403)
         return Response(serializers.data)
+
+
+     ###mypage on off 수정 
+    @action(detail=False,methods=['put'])
+    def alertOnOff(self,request):
+        user_id = request.query_params.get('user_id')
+        if not user_id:
+            return Response({"detail":"user_id query 이상해요. "},status=status.HTTP_400_BAD_REQUEST)
+        
+        user = get_object_or_404(User,pk=user_id)
+        if int(user_id) != request.user.id : 
+            return Response({'detail': 'You do not have permission to access this resource.'}, status=status.HTTP_400_BAD_REQUEST)
+        user.is_alert = not user.is_alert
+        user.save()
+        serializer = self.get_serializer(user)
+
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
+
+     ##mypage 시간 수정
+    @action(detail=False,methods=['put'])
+    def alertHourMin(self,request):
+        user_id = request.query_params.get('user_id')
+        if not user_id:
+            return Response({"detail":"user_id query 이상해요. "},status=status.HTTP_400_BAD_REQUEST)
+        user = get_object_or_404(User,pk=user_id)
+        if int(user_id) != request.user.id : 
+            return Response({'detail': 'You do not have permission to access this resource.'}, status=status.HTTP_400_BAD_REQUEST)
+        if not request.data.get('alert_hour') :
+            return Response({'detail': '시간을 넣어주세요.'}, status=status.HTTP_400_BAD_REQUEST)
+        if not request.data.get('alert_min') :
+                    return Response({'detail': '분을 넣어주세요.'}, status=status.HTTP_400_BAD_REQUEST)
+        user.alert_hour = int(request.data.get('alert_hour'))
+        user.alert_min = int(request.data.get('alert_min'))
+        user.save()
+        serializer = self.get_serializer(user)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+
+
+ 
 #jwt토큰화 시키기 . 
 def generate_jwt_token(user):
     token = AccessToken.for_user(user)
