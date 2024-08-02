@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'diary',
     'challenge',
     'firstQuestion',
+    'webmessage',
 
     # library
     'rest_framework',
@@ -64,6 +65,7 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration',
 
     'django_apscheduler',
+
 ]
 
 MIDDLEWARE = [
@@ -82,7 +84,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -140,7 +142,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -155,8 +156,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 # static 루트 설정
+# settings.py
+
+import mimetypes
+# 정적 파일 설정
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+# 정적 파일 디렉토리
+STATICFILES_DIRS = [
+    BASE_DIR / "webmessage/static",
+]
+# MIME 타입 설정
+mimetypes.add_type("application/javascript", ".js", True)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -187,7 +198,7 @@ REST_FRAMEWORK = {
     )
 }
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
 
@@ -199,3 +210,10 @@ USE_TZ = True
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"  # Default
 
 SCHEDULER_DEFAULT = True
+
+
+VAPID_PUBLIC_KEY= 'BKd1I8PDrg7zidthfuKgR-0k_-CwlXZk3p1_F1tLWAur3w3lDdSfiAQHFl_cXRi6pguzNe9Akfxrqo25XXXxGZ4'
+VAPID_PRIVATE_KEY= 'L5rFgenmml4G_EeQk8mq8iZx3EUrbssCfGLZs27UePo'
+VAPID_CLAIMS = {
+    "sub": "mailto:jmg0916789@gmail.com"
+}

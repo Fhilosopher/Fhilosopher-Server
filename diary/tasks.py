@@ -54,7 +54,6 @@ def check_is_complete():
                     daily_challenge.save()
 
     # 모든 유저의 daily_challenge 확인해서 today_complete가 False이면 current_day=0, goal_day=7로 설정, True라면 False로 초기화
-    # 일단 하드코딩, 구현방식 이야기해봐야함
     all_daily_challenges = DailyChallenge.objects.all()
     for challenge in all_daily_challenges:
         if challenge.today_complete:
@@ -65,6 +64,12 @@ def check_is_complete():
             challenge.goal_day = 7
         challenge.save()
     print(f'Objects modified at: {datetime.now()}')
+    #모든 유저의 first질문 index +1
+    all_user = User.objects.all()
+    for user in all_user:
+        user.firstq_index=user.firstq_index+1
+        user.save()
+    print(f'User firstq_idex updated at: {datetime.now()}')
 
 #매달 1일 새 폴더 생성, 이전 달 빈폴더 삭제(미완성인 diary객체도 같이 삭제됨)
 def create_and_delete_month_folder():
