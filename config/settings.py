@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'diary',
     'challenge',
     'firstQuestion',
-
+    'webmessage',
     # library
     'rest_framework',
     'rest_framework_simplejwt',
@@ -181,7 +181,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
+    BASE_DIR / "webmessage/static", #오류 날수도 있음. 
 ]
+
+# MIME 타입 설정
+mimetypes.add_type("application/javascript", ".js", True)
 
 
 # static 루트 설정
@@ -217,7 +221,7 @@ REST_FRAMEWORK = {
     )
 }
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=7),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
 
@@ -229,3 +233,8 @@ USE_TZ = True
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"  # Default
 
 SCHEDULER_DEFAULT = True
+VAPID_PUBLIC_KEY= 'BKd1I8PDrg7zidthfuKgR-0k_-CwlXZk3p1_F1tLWAur3w3lDdSfiAQHFl_cXRi6pguzNe9Akfxrqo25XXXxGZ4'
+VAPID_PRIVATE_KEY= 'L5rFgenmml4G_EeQk8mq8iZx3EUrbssCfGLZs27UePo'
+VAPID_CLAIMS = {
+    "sub": "mailto:jmg0916789@gmail.com"
+}
