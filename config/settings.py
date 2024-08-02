@@ -3,7 +3,7 @@ from datetime import timedelta
 from dotenv import load_dotenv
 import os
 import pymysql
-
+import mimetypes 
 # mysql connection
 pymysql.install_as_MySQLdb()
 
