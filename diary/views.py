@@ -150,7 +150,7 @@ class DiaryViewset(ModelViewSet):
         if int(month.user_id.id) != authenticated_user_id:   # 사용자 인증
             return Response({"status": "error", "message": "Access denied"}, status=status.HTTP_401_UNAUTHORIZED)
         
-        queryset = self.queryset.filter(month_id=month_id, is_complete=True)
+        queryset = self.queryset.filter(month_id=month_id)
         serializer = self.get_serializer(queryset, many=True)
         return Response({"status": "success", "data": serializer.data})
 
@@ -188,7 +188,10 @@ class QandAViewset(ModelViewSet):
 
             # 다이어리가 완료되었는지 확인 (complete_diary 함수 호출)
             if QandA.objects.filter(diary_id=diary.id).count() == diary.limitq_num:
-                complete_diary(diary_id)
+                return Response({
+                    "status": "finish",
+                    "data": QandASerializer(new_qanda).data
+                    }, status=status.HTTP_201_CREATED)
 
             return Response({
                 "status": "success",
