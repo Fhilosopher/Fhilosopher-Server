@@ -83,7 +83,20 @@ CORS_ALLOW_HEADERS = [
     'access-control-allow-origin',
 ]
 
+
+
 CORS_ALLOW_ALL_ORIGINS = True
+
+
+# 허용할 HTTP 메서드 설정
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PATCH',
+    'PUT',
+    'DELETE',
+    'OPTIONS'
+]
 
 ROOT_URLCONF = 'config.urls'
 
