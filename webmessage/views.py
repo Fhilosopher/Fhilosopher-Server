@@ -25,24 +25,26 @@ class SubscribeView(APIView):
 
         user = request.user  # JWT 토큰으로 인증된 사용자
 
-        # Subscription 모델에 사용자 ID와 구독 정보를 저장
-        subscription, created = Subscription.objects.get_or_create(
-            user=user,
-            endpoint=data['endpoint'],
-            defaults={
-                'p256dh': data['keys']['p256dh'],
-                'auth': data['keys']['auth'],
-            }
-        )
-
-        if not created:
+        # 사용자가 이미 구독 정보를 가지고 있는지 확인
+        try:
+            subscription = Subscription.objects.get(user=user)
             # 기존 구독 정보가 있는 경우 업데이트
+            subscription.endpoint = data['endpoint']
             subscription.p256dh = data['keys']['p256dh']
             subscription.auth = data['keys']['auth']
             subscription.save()
+            message = 'Subscription updated.'
+        except Subscription.DoesNotExist:
+            # 구독 정보가 없는 경우 새로 생성
+            Subscription.objects.create(
+                user=user,
+                endpoint=data['endpoint'],
+                p256dh=data['keys']['p256dh'],
+                auth=data['keys']['auth'],
+            )
+            message = 'Subscription created.'
 
-        return JsonResponse({'message': 'Subscription saved.'})
-
+        return JsonResponse({'message': message})
 #웹푸시 테스트용. 실제 배포시 사용X
 @csrf_exempt
 def send_push(request):

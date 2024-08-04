@@ -17,7 +17,7 @@ class Month(models.Model):
 
 class Diary(models.Model):
     firstq = models.TextField(null=True, blank=True)
-    limitq_num = models.IntegerField(default=6)
+    limitq_num = models.IntegerField(default=8)
     created_date = models.DateField(null=True, blank=True)
     created_time = models.TimeField(auto_now_add=True)
     is_complete = models.BooleanField(default=False)

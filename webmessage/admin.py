@@ -3,4 +3,4 @@ from .models import Subscription
 
 @admin.register(Subscription)
 class SubscriptionAdmin(admin.ModelAdmin):
-    list_display = ('endpoint', 'p256dh', 'auth')
+     list_display = ('user', 'p256dh', 'auth')
