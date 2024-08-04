@@ -71,7 +71,7 @@ def get_followup_question(messages, answer):
 
 def get_diary_context(diary):
     month = diary.month_id
-    diaries = Diary.objects.filter(month_id=month, is_complete=True).order_by('created_date')
+    diaries = Diary.objects.filter(month_id=month).order_by('created_date')
 
     diary_list = list(diaries)
     diary_index = diary_list.index(diary)
