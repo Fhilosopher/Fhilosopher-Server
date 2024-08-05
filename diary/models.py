@@ -26,11 +26,12 @@ class Diary(models.Model):
     month_id = models.ForeignKey(Month, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
-        now = datetime.now()
-        if now.time() <= time(5, 0):
-            self.created_date = (now - timedelta(days=1)).date()
-        else:
-            self.created_date = now.date()
+        if not self.created_date:
+            now = datetime.now()
+            if now.time() <= time(5, 0):
+                self.created_date = (now - timedelta(days=1)).date()
+            else:
+                self.created_date = now.date()
 
         if not self.firstq:  # firstq가 비어 있을 때만 설정
             user = self.user_id
