@@ -17,7 +17,7 @@ class Month(models.Model):
 
 class Diary(models.Model):
     firstq = models.TextField(null=True, blank=True)
-    limitq_num = models.IntegerField(default=8)
+    limitq_num = models.IntegerField(default=6)
     created_date = models.DateField(null=True, blank=True)
     created_time = models.TimeField(auto_now_add=True)
     is_complete = models.BooleanField(default=False)
@@ -26,11 +26,12 @@ class Diary(models.Model):
     month_id = models.ForeignKey(Month, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
-        now = datetime.now()
-        if now.time() <= time(5, 0):
-            self.created_date = (now - timedelta(days=1)).date()
-        else:
-            self.created_date = now.date()
+        if not self.created_date:
+            now = datetime.now()
+            if now.time() <= time(5, 0):
+                self.created_date = (now - timedelta(days=1)).date()
+            else:
+                self.created_date = now.date()
 
         if not self.firstq:  # firstq가 비어 있을 때만 설정
             user = self.user_id
@@ -60,4 +61,3 @@ class QandA(models.Model):
 
     def __str__(self):
         return self.answer
-
