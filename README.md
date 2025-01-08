@@ -13,11 +13,11 @@
 
 | **분야** | **이름** | **포지션** |
 | --- | --- | --- |
-| **백엔드** | [정파린](https://github.com) | 📋 서비스 기획, 🖥️ DB 및 API 구축, 서버 배포 |
-| **백엔드** | [윤예은](https://github.com/YunYeEun-124) | 📋 서비스 기획, 🖥️ DB 및 API 구축 |
+| **백엔드** | [윤예은](https://github.com/YunYeEun-124) | 📋 서비스 기획, 🖥️ DB 및 API 구축, 서버 배포  |
+| **백엔드** | [정파란](https://github.com/BlueRedOrange) | 📋 서비스 기획, 🖥️ DB 및 API 구축|
 | **백엔드**  | [한다현](https://github.com) | 📋 서비스 기획, 🖥️ DB 및 API 구축 |
+| **프론트엔드** | [김서아](https://github.com/seoooa) | 📋 서비스 기획, 📱 화면 UI 구현, 서버 연동 |
 | **프론트엔드** | [김진아](https://github.com/jinaaaaaaaaaaaaa) | 📋 서비스 기획, 📱 화면 UI 구현, 서버 연동 |
-| **프론트엔드** | [김서아](https://github.com) | 📋 서비스 기획, 📱 화면 UI 구현, 서버 연동 |
 | **프론트엔드** | [임수연](https://github.com) | 📋 서비스 기획, 📱 화면 UI 구현, 서버 연동 |
 
 
@@ -28,8 +28,8 @@
 ### 🛠️ BackEnd
 
 **Language & Framework**  
-<img src="https://img.shields.io/badge/Java-007396?style=flat&logo=Java&logoColor=white" />
-<img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=flat&logo=SpringBoot&logoColor=white" /> 
+<img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white">
+<img src="https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white" /> 
 
 **Cloud & Hosting**  
 <img src="https://img.shields.io/badge/AmazonEC2-FF9900?style=flat&logo=AmazonEC2&logoColor=white" /> 
