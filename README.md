@@ -2,7 +2,7 @@
 > 개발 기간 : 2024.07 ~ 2024.9 <br>
 
 
-![image](https://github.com/user-attachments/assets/33fd731d-44d7-4044-b69c-4e87679d0553)
+
 
 
 #  팀 소개
@@ -51,6 +51,25 @@
 
 **Deployment**  
 <img src="https://img.shields.io/badge/vercel-000000?style=flat&logo=vercel&logoColor=white" />
+
+**시스템 아키텍처**
+![image](https://github.com/user-attachments/assets/ee7afea2-ccc5-436d-afeb-250dbd1934c1)
+
+**ERD**
+![image](https://github.com/user-attachments/assets/772d8fac-9ec2-4016-aec6-85382bf8febe)
+
+# 💻 Page 구성 
+
+### Monthly Page
+
+![image](https://github.com/user-attachments/assets/2d0325b5-7058-46af-92f6-121c8835a42c)
+
+
+### Daily Page
+![image](https://github.com/user-attachments/assets/2b2e3275-f48c-4985-b210-791baea9a1ed)
+
+### My Page
+![image](https://github.com/user-attachments/assets/dc7fd081-7de3-4705-a39c-06a23d96733b)
 
 
 <br><br>
