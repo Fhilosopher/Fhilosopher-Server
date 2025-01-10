@@ -1,8 +1,9 @@
 ## BODA
 > 개발 기간 : 2024.07 ~ 2024.9 <br>
-> 배포 주소 : 
 
-(이미지 자리) 
+
+![image](https://github.com/user-attachments/assets/33fd731d-44d7-4044-b69c-4e87679d0553)
+
 
 #  팀 소개
 
